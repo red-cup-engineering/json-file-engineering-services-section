@@ -1,0 +1,4 @@
+[submodule "json-file-codec-service"]
+	path = services/json-file-codec-service
+	url = https://github.com/red-cup-engineering/json-file-codec-service.git
+	branch = main
