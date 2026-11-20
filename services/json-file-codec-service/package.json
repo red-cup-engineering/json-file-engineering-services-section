@@ -6,27 +6,34 @@
   "exports": {
     ".": {
       "types": "./dist/json/index.d.mts",
+      "lagoon-source": "./src/json/index.mts",
       "import": "./dist/json/index.mjs"
     },
     "./jsonl": {
       "types": "./dist/json/jsonl/index.d.mts",
+      "lagoon-source": "./src/json/jsonl/index.mts",
       "import": "./dist/json/jsonl/index.mjs"
     },
     "./jsonl/eavt": {
       "types": "./dist/json/jsonl/eavt/index.d.mts",
+      "lagoon-source": "./src/json/jsonl/eavt/index.mts",
       "import": "./dist/json/jsonl/eavt/index.mjs"
     },
     "./jsonl/eavt/datom": {
       "types": "./dist/json/jsonl/eavt/datom/index.d.mts",
+      "lagoon-source": "./src/json/jsonl/eavt/datom/index.mts",
       "import": "./dist/json/jsonl/eavt/datom/index.mjs"
     },
     "./jsonl/eavt/triple": {
       "types": "./dist/json/jsonl/eavt/triple/index.d.mts",
+      "lagoon-source": "./src/json/jsonl/eavt/triple/index.mts",
       "import": "./dist/json/jsonl/eavt/triple/index.mjs"
     }
   },
   "files": [
     "dist",
+    "src",
+    "tsconfig.build.json",
     "package.json"
   ],
   "dependencies": {
@@ -39,7 +46,8 @@
     "typescript": "^5.8.0"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json"
+    "build": "tsc -p tsconfig.build.json",
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",

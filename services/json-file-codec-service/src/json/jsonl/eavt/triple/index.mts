@@ -4,10 +4,10 @@
  * A codec leaf for the external `{s,p,o}` data shape (e.g. RDF-ish export),
  * projected from an EAVT witness or an object datom by dropping time/op.
  */
-import { canonical, requireJsonValue, type JsonRecord, type JsonValue } from "../../../core.mjs";
+import { canonical, requireJsonValue, type JsonRecord, type JsonValue } from "../../../core.mts";
 import { sha256Hex } from "@red-cup-engineering/file-cryptographic-integrity-service";
-import { assertObjectDatom } from "../datom/index.mjs";
-import { eavtRecord, type EAVT, type EAVTRecord } from "../index.mjs";
+import { assertObjectDatom } from "../datom/index.mts";
+import { eavtRecord, type EAVT, type EAVTRecord } from "../index.mts";
 
 /** A plain SPO triple. */
 export type Triple = Readonly<{ readonly s: JsonValue; readonly p: JsonValue; readonly o: JsonValue }>;

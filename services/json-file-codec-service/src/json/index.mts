@@ -1,2 +1,2 @@
-export * from "./core.mjs";
-export * as jsonl from "./jsonl/index.mjs";
+export * from "./core.mts";
+export * as jsonl from "./jsonl/index.mts";

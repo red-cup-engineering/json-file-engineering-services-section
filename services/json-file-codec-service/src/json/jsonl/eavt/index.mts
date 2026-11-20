@@ -11,9 +11,9 @@
  * For the invocation ledger the mapping is exact: E = caller, A = morphism and
  * its arguments, V = the return value, T = the timestamp.
  */
-import { canonical, isJsonValue, requireJsonValue, type JsonValue } from "../../core.mjs";
+import { canonical, isJsonValue, requireJsonValue, type JsonValue } from "../../core.mts";
 import { restrict, type Projector } from "@red-cup-engineering/file-projection-kernel-service";
-import { jsonlProjector, parseLines, serializeLines } from "../../core.mjs";
+import { jsonlProjector, parseLines, serializeLines } from "../../core.mts";
 import { mark, type Mark } from "@red-cup-engineering/metrologic/mark";
 import { oneSided, type Valued } from "@red-cup-engineering/metrologic/articulation/predicating/positing/valued";
 import { sha256Hex } from "@red-cup-engineering/file-cryptographic-integrity-service";
@@ -203,5 +203,5 @@ export const eavtProjector: Projector<JsonValue> = restrict(jsonlProjector, {
   },
 });
 
-export * as datom from "./datom/index.mjs";
-export * as triple from "./triple/index.mjs";
+export * as datom from "./datom/index.mts";
+export * as triple from "./triple/index.mts";

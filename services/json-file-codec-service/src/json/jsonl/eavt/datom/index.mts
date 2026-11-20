@@ -6,7 +6,7 @@
  * current value (CQRS read-model) and the paraconsistent section (present/absent
  * evidence per cell → potential/active/stable). Self-contained over JSON.
  */
-import { canonical, parseLines, requireJsonValue, serializeLines, type JsonRecord, type JsonValue } from "../../../core.mjs";
+import { canonical, parseLines, requireJsonValue, serializeLines, type JsonRecord, type JsonValue } from "../../../core.mts";
 import { sha256Hex } from "@red-cup-engineering/file-cryptographic-integrity-service";
 
 /** A datom tuple: EAVT plus the computed reading (five parts). */
