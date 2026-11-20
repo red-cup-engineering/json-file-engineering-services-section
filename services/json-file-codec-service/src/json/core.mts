@@ -6,7 +6,7 @@
  * idempotence is detectable across a pipe), and projects JSON-line documents.
  * Free data enters or leaves only through here; core code works over carriers.
  */
-import { define, restrict, type Projector, type Resource } from "@red-cup-engineering/file-projection-kernel-service";
+import { define, type Projector, type Resource } from "@red-cup-engineering/file-projection-kernel-service";
 
 /** A JSON value: the closed universe of JSON. */
 export type JsonValue = null | boolean | number | string | readonly JsonValue[] | { readonly [key: string]: JsonValue };
@@ -104,9 +104,11 @@ export const jsonProjector: Projector<JsonValue> = define<JsonValue>({
   write: (items) => (items.length === 0 ? "" : `${canonical(items[0] as JsonValue)}\n`),
 });
 
-/** The JSON-lines projector: a restriction reading each line as a carried value. */
-export const jsonlProjector: Projector<JsonValue> = restrict(jsonProjector, {
+/** JSON Lines admits each line independently, including multi-document streams. */
+export const jsonlProjector: Projector<JsonValue> = define<JsonValue>({
   type: "jsonl",
+  corner: "data",
+  rung: "identity",
   recognize: (resource) => {
     try {
       parseLines(resource.content);

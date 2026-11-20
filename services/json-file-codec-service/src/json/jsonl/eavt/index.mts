@@ -47,6 +47,11 @@ export function isEavtShape(value: JsonValue): boolean {
   return Array.isArray(value) && value.length === 4 && value.every(isJsonValue);
 }
 
+function isEavtRow(value: JsonValue): value is EAVT | EAVTRecord {
+  return isEavtShape(value) || (typeof value === "object" && value !== null &&
+    !Array.isArray(value) && ["e", "a", "v", "t"].every(key => Object.hasOwn(value, key)));
+}
+
 /** Normalize a tuple or object row into the canonical `{e,a,v,t}` record. */
 export function eavtRecord(row: EAVT | EAVTRecord): EAVTRecord {
   if (Array.isArray(row)) {
@@ -68,10 +73,7 @@ export function eavtId(row: EAVT | EAVTRecord): string {
 export function parse(content: string): EAVTRecord[] {
   const out: EAVTRecord[] = [];
   for (const value of parseLines(content)) {
-    if (isEavtShape(value)) out.push(eavtRecord(value as unknown as EAVT));
-    else if (typeof value === "object" && value !== null && !Array.isArray(value) && "e" in value && "a" in value && "v" in value && "t" in value) {
-      out.push(eavtRecord(value as unknown as EAVTRecord));
-    }
+    if (isEavtRow(value)) out.push(eavtRecord(value));
   }
   return out;
 }
@@ -94,16 +96,14 @@ export function toEavt(value: EAVT | EAVTRecord): EAVT {
 
 /** Merge witness logs by content identity, sorted by id — the monotone union. */
 export function mergeEavtLogs(...logs: readonly (readonly (EAVT | EAVTRecord)[])[]): EAVT[] {
-  const seen = new Set<string>();
-  const rows: EAVT[] = [];
-  for (const value of logs.flat()) {
-    const row = toEavt(eavtRecord(value));
-    const id = eavtId(row);
-    if (seen.has(id)) continue;
-    seen.add(id);
-    rows.push(row);
+  const byId = new Map<string, EAVT>();
+  for (const log of logs) {
+    for (const value of log) {
+      const id = eavtId(value);
+      if (!byId.has(id)) byId.set(id, toEavt(value));
+    }
   }
-  return rows.sort((left, right) => eavtId(left).localeCompare(eavtId(right)));
+  return [...byId.entries()].sort(([left], [right]) => left.localeCompare(right)).map(([, row]) => row);
 }
 
 const escapePointer = (part: string): string => part.replace(/~/g, "~0").replace(/\//g, "~1");
@@ -196,7 +196,7 @@ export const eavtProjector: Projector<JsonValue> = restrict(jsonlProjector, {
   corner: "assertion",
   recognize: (resource) => {
     try {
-      return parseLines(resource.content).every(isEavtShape);
+      return parseLines(resource.content).every(isEavtRow);
     } catch {
       return false;
     }

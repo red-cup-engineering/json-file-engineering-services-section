@@ -34,12 +34,13 @@
     "dist",
     "src",
     "tsconfig.build.json",
-    "package.json"
+    "package.json",
+    "test/flight-records.test.mjs"
   ],
   "dependencies": {
-    "@red-cup-engineering/file-cryptographic-integrity-service": "^0.1.1",
-    "@red-cup-engineering/file-projection-kernel-service": "^0.1.1",
-    "@red-cup-engineering/metrologic": "^0.22.4"
+    "@red-cup-engineering/file-cryptographic-integrity-service": "^0.1.1 || 0.1.2-dev.0",
+    "@red-cup-engineering/file-projection-kernel-service": "^0.1.1 || 0.1.2-dev.0",
+    "@red-cup-engineering/metrologic": "^0.22.4 || 0.22.12-dev.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
@@ -47,7 +48,8 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "test": "node test/flight-records.test.mjs"
   },
   "repository": {
     "type": "git",
