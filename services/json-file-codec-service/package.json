@@ -1,0 +1,64 @@
+{
+  "name": "@red-cup-engineering/json-file-codec-service",
+  "version": "0.1.5-dev.0",
+  "private": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/json/index.d.mts",
+      "lagoon-source": "./src/json/index.mts",
+      "import": "./dist/json/index.mjs"
+    },
+    "./jsonl": {
+      "types": "./dist/json/jsonl/index.d.mts",
+      "lagoon-source": "./src/json/jsonl/index.mts",
+      "import": "./dist/json/jsonl/index.mjs"
+    },
+    "./jsonl/eavt": {
+      "types": "./dist/json/jsonl/eavt/index.d.mts",
+      "lagoon-source": "./src/json/jsonl/eavt/index.mts",
+      "import": "./dist/json/jsonl/eavt/index.mjs"
+    },
+    "./jsonl/eavt/datom": {
+      "types": "./dist/json/jsonl/eavt/datom/index.d.mts",
+      "lagoon-source": "./src/json/jsonl/eavt/datom/index.mts",
+      "import": "./dist/json/jsonl/eavt/datom/index.mjs"
+    },
+    "./jsonl/eavt/triple": {
+      "types": "./dist/json/jsonl/eavt/triple/index.d.mts",
+      "lagoon-source": "./src/json/jsonl/eavt/triple/index.mts",
+      "import": "./dist/json/jsonl/eavt/triple/index.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "tsconfig.build.json",
+    "package.json",
+    "test/flight-records.test.mjs"
+  ],
+  "dependencies": {
+    "@red-cup-engineering/file-cryptographic-integrity-service": "^0.1.1 || 0.1.2-dev.0",
+    "@red-cup-engineering/file-projection-kernel-service": "^0.1.1 || 0.1.2-dev.0",
+    "@red-cup-engineering/metrologic": "^0.22.4 || 0.22.12-dev.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepack": "npm run build",
+    "test": "node test/flight-records.test.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/red-cup-engineering/json-file-engineering-services-section.git",
+    "directory": "services/json-file-codec-service"
+  },
+  "license": "MIT",
+  "funding": {
+    "type": "individual",
+    "url": "https://github.com/561-group/.github/blob/main/TIPS.md"
+  }
+}
