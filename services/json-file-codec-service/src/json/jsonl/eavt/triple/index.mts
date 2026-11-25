@@ -4,7 +4,8 @@
  * A codec leaf for the external `{s,p,o}` data shape (e.g. RDF-ish export),
  * projected from an EAVT witness or an object datom by dropping time/op.
  */
-import { canonical, requireJsonValue, type JsonRecord, type JsonValue } from "../../../core.mts";
+import { canonicalJson } from "@red-cup-engineering/json-engine/canonical-json";
+import { requireJsonValue, type JsonRecord, type JsonValue } from "../../../core.mts";
 import { sha256Hex } from "@red-cup-engineering/semiotic-content-address-system";
 import { assertObjectDatom } from "../datom/index.mts";
 import { eavtRecord, type EAVT, type EAVTRecord } from "../index.mts";
@@ -24,7 +25,7 @@ export function assertTriple(value: unknown): Triple {
 
 /** The content identity of a triple. */
 export function tripleId(value: unknown): string {
-  return sha256Hex(canonical(assertTriple(value) as unknown as JsonValue));
+  return sha256Hex(canonicalJson(assertTriple(value) as unknown as JsonValue));
 }
 
 /** Dedupe triples by content identity. */

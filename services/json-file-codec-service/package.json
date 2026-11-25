@@ -41,6 +41,7 @@
     "@red-cup-engineering/file-cryptographic-integrity-service": "^0.1.1 || 0.1.2-dev.0",
     "@red-cup-engineering/file-projection-kernel-service": "^0.1.1 || 0.1.2-dev.0",
     "@red-cup-engineering/metrologic": "^0.22.4 || 0.22.12-dev.0",
+    "@red-cup-engineering/json-engine": "0.5.5-dev.0",
     "@red-cup-engineering/semiotic-content-address-system": "0.1.9"
   },
   "devDependencies": {

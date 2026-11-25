@@ -6,7 +6,8 @@
  * current value (CQRS read-model) and the paraconsistent section (present/absent
  * evidence per cell → potential/active/stable). Self-contained over JSON.
  */
-import { canonical, parseLines, requireJsonValue, serializeLines, type JsonRecord, type JsonValue } from "../../../core.mts";
+import { canonicalJson } from "@red-cup-engineering/json-engine/canonical-json";
+import { parseLines, requireJsonValue, serializeLines, type JsonRecord, type JsonValue } from "../../../core.mts";
 import { sha256Hex } from "@red-cup-engineering/semiotic-content-address-system";
 
 /** A datom tuple: EAVT plus the computed reading (five parts). */
@@ -91,7 +92,7 @@ export function retractDatomFact(e: JsonValue, a: JsonValue, v: JsonValue, tx: J
 
 /** The content identity of an object datom. */
 export function objectDatomId(value: unknown): string {
-  return sha256Hex(canonical(assertObjectDatom(value) as unknown as JsonValue));
+  return sha256Hex(canonicalJson(assertObjectDatom(value) as unknown as JsonValue));
 }
 
 /** The current (live) cell values after folding assert/retract. */
@@ -100,7 +101,7 @@ export function currentDatomValue(datoms: readonly unknown[]): CurrentDatomFact[
   for (const d of datoms) {
     const asserted = assertObjectDatom(d);
     const fact = Object.freeze({ e: asserted.e, a: asserted.a, v: asserted.v });
-    const key = canonical(fact);
+    const key = canonicalJson(fact);
     if (asserted.op === RETRACT) live.delete(key);
     else live.set(key, fact);
   }
@@ -118,10 +119,10 @@ export function foldObjectDatoms(datoms: readonly unknown[]): ObjectDatomSection
   const cells = new Map<string, Fold>();
   const asserted = datoms.map(assertObjectDatom);
   for (const d of asserted) {
-    const key = canonical({ e: d.e, a: d.a, v: d.v });
+    const key = canonicalJson({ e: d.e, a: d.a, v: d.v });
     const cell = cells.get(key) ?? { datom: d, positive: new Map<string, JsonValue>(), negative: new Map<string, JsonValue>() };
     const evidence = d.op === ASSERT ? cell.positive : cell.negative;
-    evidence.set(canonical(d.tx), d.tx);
+    evidence.set(canonicalJson(d.tx), d.tx);
     cells.set(key, cell);
   }
   const sectionCells = [...cells.values()].map(({ datom: d, positive, negative }): ObjectDatomSectionCell => {
@@ -135,9 +136,9 @@ export function foldObjectDatoms(datoms: readonly unknown[]): ObjectDatomSection
       evidence: Object.freeze([Object.freeze(present), Object.freeze(absent)] as const),
     });
   }).sort((left, right) =>
-    canonical(left.subject).localeCompare(canonical(right.subject))
-      || canonical(left.predicate).localeCompare(canonical(right.predicate))
-      || canonical(left.object).localeCompare(canonical(right.object)));
+    canonicalJson(left.subject).localeCompare(canonicalJson(right.subject))
+      || canonicalJson(left.predicate).localeCompare(canonicalJson(right.predicate))
+      || canonicalJson(left.object).localeCompare(canonicalJson(right.object)));
   return Object.freeze({ datoms: Object.freeze(asserted), cells: Object.freeze(sectionCells) });
 }
 
@@ -149,7 +150,7 @@ export function objectDatomWitnesses(
   const subject = "subject" in cell ? cell.subject : cell.e;
   const predicate = "predicate" in cell ? cell.predicate : cell.a;
   const object = "object" in cell ? cell.object : cell.v;
-  const key = canonical({ e: requireJsonValue(subject, "cell subject"), a: requireJsonValue(predicate, "cell predicate"), v: requireJsonValue(object, "cell object") });
-  const found = section.cells.find((candidate) => canonical({ e: candidate.subject, a: candidate.predicate, v: candidate.object }) === key);
+  const key = canonicalJson({ e: requireJsonValue(subject, "cell subject"), a: requireJsonValue(predicate, "cell predicate"), v: requireJsonValue(object, "cell object") });
+  const found = section.cells.find((candidate) => canonicalJson({ e: candidate.subject, a: candidate.predicate, v: candidate.object }) === key);
   return found?.evidence[0] ?? Object.freeze([]);
 }

@@ -7,6 +7,7 @@
  * Free data enters or leaves only through here; core code works over carriers.
  */
 import { define, type Projector, type Resource } from "@red-cup-engineering/file-projection-kernel-service";
+import { canonicalJson } from "@red-cup-engineering/json-engine/canonical-json";
 
 /** A JSON value: the closed universe of JSON. */
 export type JsonValue = null | boolean | number | string | readonly JsonValue[] | { readonly [key: string]: JsonValue };
@@ -47,25 +48,6 @@ export function jsonResource(value: unknown, context = "json resource"): JsonVal
   return requireJsonValue(JSON.parse(JSON.stringify(value)) as unknown, context);
 }
 
-/**
- * The canonical serialization of a JSON value: object keys sorted, stable bytes.
- *
- * @example
- * ```js
- * import { canonical } from "@red-cup-engineering/json-file-codec-service";
- *
- * canonical({ b: 2, a: 1 }); // "{\"a\":1,\"b\":2}"
- * ```
- */
-export function canonical(value: JsonValue): string {
-  if (value === null || typeof value === "boolean" || typeof value === "number") return JSON.stringify(value);
-  if (typeof value === "string") return JSON.stringify(value);
-  if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
-  const record = value as JsonRecord;
-  const keys = Object.keys(record).sort();
-  return `{${keys.map((key) => `${JSON.stringify(key)}:${canonical(record[key] as JsonValue)}`).join(",")}}`;
-}
-
 /** The non-blank lines of a document. */
 export const nonBlankLines = (content: string): string[] =>
   content.split("\n").filter((line) => line.trim() !== "");
@@ -83,7 +65,7 @@ export function parseLines(content: string): JsonValue[] {
 
 /** Serialize values as newline-delimited canonical JSON (trailing newline). */
 export function serializeLines(values: readonly JsonValue[]): string {
-  return values.length === 0 ? "" : `${values.map(canonical).join("\n")}\n`;
+  return values.length === 0 ? "" : `${values.map((value) => canonicalJson(value)).join("\n")}\n`;
 }
 
 /** The JSON projector: recognizes any content that parses as JSON; reads it as a
@@ -101,7 +83,7 @@ export const jsonProjector: Projector<JsonValue> = define<JsonValue>({
     }
   },
   read: (resource) => [parse(resource.content)],
-  write: (items) => (items.length === 0 ? "" : `${canonical(items[0] as JsonValue)}\n`),
+  write: (items) => (items.length === 0 ? "" : `${canonicalJson(items[0] as JsonValue)}\n`),
 });
 
 /** JSON Lines admits each line independently, including multi-document streams. */

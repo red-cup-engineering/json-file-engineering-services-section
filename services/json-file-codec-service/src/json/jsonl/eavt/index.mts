@@ -11,7 +11,8 @@
  * For the invocation ledger the mapping is exact: E = caller, A = morphism and
  * its arguments, V = the return value, T = the timestamp.
  */
-import { canonical, isJsonValue, requireJsonValue, type JsonValue } from "../../core.mts";
+import { canonicalJson } from "@red-cup-engineering/json-engine/canonical-json";
+import { isJsonValue, requireJsonValue, type JsonValue } from "../../core.mts";
 import { restrict, type Projector } from "@red-cup-engineering/file-projection-kernel-service";
 import { jsonlProjector, parseLines, serializeLines } from "../../core.mts";
 import { mark, type Mark } from "@red-cup-engineering/metrologic/mark";
@@ -66,7 +67,7 @@ export function eavtRecord(row: EAVT | EAVTRecord): EAVTRecord {
  *  unchanged cell re-witnesses to a byte-identical id and dedupes to zero cost. */
 export function eavtId(row: EAVT | EAVTRecord): string {
   const r = eavtRecord(row);
-  return sha256Hex(canonical(r as unknown as JsonValue));
+  return sha256Hex(canonicalJson(r as unknown as JsonValue));
 }
 
 /** Read an EAVT JSONL document into normalized records (malformed lines skipped). */
@@ -179,8 +180,8 @@ export function cellToEavt(charged: ChargedCell): EAVT[] {
 /** The E-A-V-T order: compare canonical-json keys component by component. */
 export function eavtOrder(x: EAVT, y: EAVT): number {
   for (let i = 0; i < 4; i++) {
-    const xk = canonical(x[i]!);
-    const yk = canonical(y[i]!);
+    const xk = canonicalJson(x[i]!);
+    const yk = canonicalJson(y[i]!);
     if (xk < yk) return -1;
     if (xk > yk) return 1;
   }
