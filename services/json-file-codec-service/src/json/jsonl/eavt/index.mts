@@ -16,7 +16,7 @@ import { restrict, type Projector } from "@red-cup-engineering/file-projection-k
 import { jsonlProjector, parseLines, serializeLines } from "../../core.mts";
 import { mark, type Mark } from "@red-cup-engineering/metrologic/mark";
 import { oneSided, type Valued } from "@red-cup-engineering/metrologic/articulation/predicating/positing/valued";
-import { sha256Hex } from "@red-cup-engineering/file-cryptographic-integrity-service";
+import { sha256Hex } from "@red-cup-engineering/semiotic-content-address-system";
 
 /** A subject-predicate-object cell — the triple an EAVT witnesses. */
 export type Cell = { readonly subject: JsonValue; readonly predicate: JsonValue; readonly object: JsonValue };

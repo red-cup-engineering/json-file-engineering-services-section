@@ -5,7 +5,7 @@
  * projected from an EAVT witness or an object datom by dropping time/op.
  */
 import { canonical, requireJsonValue, type JsonRecord, type JsonValue } from "../../../core.mts";
-import { sha256Hex } from "@red-cup-engineering/file-cryptographic-integrity-service";
+import { sha256Hex } from "@red-cup-engineering/semiotic-content-address-system";
 import { assertObjectDatom } from "../datom/index.mts";
 import { eavtRecord, type EAVT, type EAVTRecord } from "../index.mts";
 
